@@ -31,8 +31,8 @@
                         {
                             foreach (Tile t in p.PlayingTiles)
                             {
-                                p0.Score += AllTiles.ScoreOfLetter(t.TileChar);
-                                p.Score -= AllTiles.ScoreOfLetter(t.TileChar);
+                                p0.Score += AllGreekTiles.ScoreOfLetter(t.TileChar);
+                                p.Score -= AllGreekTiles.ScoreOfLetter(t.TileChar);
                             }
                         }
                     }
@@ -43,7 +43,7 @@
                     {
                         foreach (Tile t in p.PlayingTiles)
                         {
-                            p.Score -= AllTiles.ScoreOfLetter(t.TileChar);
+                            p.Score -= AllGreekTiles.ScoreOfLetter(t.TileChar);
                         }
                     }
                 }

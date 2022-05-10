@@ -425,7 +425,7 @@ namespace UnitTests
             // Arrange
 
             // Act
-            var result = AllTiles.ScoreOfLetter('*');
+            var result = AllEnglishTiles.ScoreOfLetter('*');
 
             // Reset
 

@@ -11,7 +11,7 @@ namespace Scrabble.Controller
     {
         private Random rnd = new Random();
         public int PlayerFirst, PlayerNow;
-        public AllTiles TilesBag;
+        public AllTilesBase TilesBag;
         public bool BoardChanged;
         public GameState gs;
         public MoveRecorder moveRecorder;
@@ -34,6 +34,12 @@ namespace Scrabble.Controller
                 return true;
             }
             else return false;
+        }
+
+        public IEnumerable<string> Cheat(IEnumerable<char> letters)
+        {
+            var words = AllGreekTiles.Cheat(letters);
+            return words;
         }
 
         public void Subs(IView view)

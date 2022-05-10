@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Scrabble.Model.Word
 {
     public static class WordCollector
     {
-        private static List<String> TxtItems;
         private static GameState gamestate;
         private static List<char> BlackToChar = new List<char>();
 
         public static int Locate(string s)
         {
-            var Lines = File.ReadAllLines(@"Model\Word\wordlist.txt");
-            TxtItems = new List<string>(Lines);
+            //The format is: word frequency<tab>word, one or more endings<tab>definition
+            var TxtItems = AllGreekTiles.GetWords();
             gamestate.WordsAppearedInValidation.Clear();
             foreach (string str in gamestate.WordsAppeared)
             {
                 gamestate.WordsAppearedInValidation.Add(str);
             }
 
-            if (TxtItems.Contains(s))
+            if (TxtItems.Any(x => AllGreekTiles.WordEqual(s, x, false)))
             {
                 if (!gamestate.WordsAppearedInValidation.Contains(s))
                 {
@@ -37,7 +37,6 @@ namespace Scrabble.Model.Word
                 return -1; // Not correct
             }
         }
-
 
         public static int VCollect(int i, int j, char[,] b, GameState gs)
         {

@@ -8,6 +8,7 @@ using Scrabble.View;
 using Scrabble.Model;
 using Scrabble.Controller;
 using Scrabble.Model.Game;
+using System.Linq;
 
 namespace Scrabble
 {
@@ -38,6 +39,7 @@ namespace Scrabble
                 {
                     Button b = new Button();
                     b.Click += Copier;
+                    b.MouseDoubleClick += BoardButton_MouseDoubleClick;
                     b.FontSize = 33;
                     BoardGrid.Children.Add(b);
                     b.Content = '\0';
@@ -233,6 +235,26 @@ namespace Scrabble
                 LoadBoardView();
                 Retry();
             }
+        }
+
+        private void BoardButton_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Button clickedButton = sender as Button;
+            if (clickedButton == null) // safety reason
+                return;
+            ShowCheats((char)clickedButton.Content);
+        }
+
+        private void ShowCheats(char? intersect = null)
+        {
+            var letters = game.gs.ListOfPlayers[ThisPlayer].PlayingTiles.Select(x => x.TileChar).ToList();
+            if (intersect.HasValue)
+                letters.Add(intersect.Value);
+            var possibles = game.Cheat(letters);
+            if (possibles.Any(x => x.Length > 1))
+                MessageBox.Show(string.Join(", ", possibles.Where(x => x.Length > 1)), "Cheat");
+            else
+                MessageBox.Show("You're sunk.", "Cheat");
         }
 
         private void PassButton_Click(object sender, RoutedEventArgs e)

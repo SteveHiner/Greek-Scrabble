@@ -1,25 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace Scrabble.Model
 {
-    public class AllTiles
+    public class AllEnglishTiles : AllTilesBase, IAllTiles
     {
-        public bool Empty()
-        {
-            if (ListTiles.Count > 0) return false;
-            else return true;
-        }
-
-        public List<Tile> ListTiles;
-
-        public AllTiles()
+        public AllEnglishTiles()
         {
             MakeTiles();
         }
-        /*public Tiles(){
-            MakeTiles();
-        }*/
 
         public void MakeTiles()
         {
@@ -35,6 +25,11 @@ namespace Scrabble.Model
             Tile b = new Tile('-', 0);
             ListTiles.Add(b); // blank
             ListTiles.Add(b);
+        }
+
+        public static IEnumerable<string> Getwords()
+        {
+            return File.ReadAllLines(@"Model\Word\wordlist.txt");
         }
 
         /*
@@ -68,5 +63,6 @@ namespace Scrabble.Model
             else if (c == 'E') return 12;
             else return 0;
         }
+
     }
 }

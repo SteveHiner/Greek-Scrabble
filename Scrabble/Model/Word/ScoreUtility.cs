@@ -15,7 +15,7 @@ namespace Scrabble.Model.Word
                 {
                     if (b[fix, q] != '\0')
                     {
-                        sum += AllTiles.ScoreOfLetter(b[fix, q]) * bt.LetterMultiplier(fix, q);
+                        sum += AllGreekTiles.ScoreOfLetter(b[fix, q]) * bt.LetterMultiplier(fix, q);
                         if (bt.WordMultiplier(fix, q) != 1)
                         {
                             WordMultiply.Add(bt.WordMultiplier(fix, q));
@@ -32,7 +32,7 @@ namespace Scrabble.Model.Word
                 {
                     if (b[q, fix] != '\0')
                     {
-                        sum += AllTiles.ScoreOfLetter(b[q, fix]) * bt.LetterMultiplier(q, fix);
+                        sum += AllGreekTiles.ScoreOfLetter(b[q, fix]) * bt.LetterMultiplier(q, fix);
                         if (bt.WordMultiplier(q, fix) != 1)
                         {
                             WordMultiply.Add(bt.WordMultiplier(q, fix));

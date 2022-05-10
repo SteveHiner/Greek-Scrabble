@@ -9,12 +9,12 @@ namespace Scrabble.Model.Game
         // Game start drawing to be used once in a game
         public static Dictionary<int, Tile> Drawn;
         private static Random rnd = new Random();
-        private static AllTiles TilesBag;
+        private static AllTilesBase TilesBag;
         private static List<Tile> ListGot;
         public static void Draw()
         {
             Drawn = new Dictionary<int, Tile>();
-            TilesBag = new AllTiles();
+            TilesBag = new AllGreekTiles();
             for (int i = 0; i < GameState.GSInstance.NumOfPlayers; i++)
             {
                 Drawn.Add(i, TilesBag.ListTiles[rnd.Next(0, TilesBag.ListTiles.Count)]);

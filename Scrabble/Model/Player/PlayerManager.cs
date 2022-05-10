@@ -63,7 +63,7 @@ namespace Scrabble.Model
                     break;
                 }
             }
-            GameState.GSInstance.TilesBag.ListTiles.Add(new Tile(c, AllTiles.ScoreOfLetter(c)));
+            GameState.GSInstance.TilesBag.ListTiles.Add(new Tile(c, AllGreekTiles.ScoreOfLetter(c)));
             return t.TileChar;
         }
     }

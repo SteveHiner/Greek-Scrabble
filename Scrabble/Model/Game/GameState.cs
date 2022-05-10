@@ -10,7 +10,7 @@ namespace Scrabble.Model
         // Core GameState class
         public char[,] BoardChar;
         public List<Player> ListOfPlayers;
-        public AllTiles TilesBag;
+        public AllTilesBase TilesBag;
         public List<string> WordsAppeared;
         public List<string> WordsAppearedInValidation;
         public PlayerManager playerManager;
@@ -65,7 +65,7 @@ namespace Scrabble.Model
         public GameState()
         {
             this.ListOfPlayers = new List<Player>();
-            this.TilesBag = new AllTiles();
+            this.TilesBag = new AllGreekTiles();
             this.playerManager = new PlayerManager();
 
             this.WordsAppeared = new List<string>();
