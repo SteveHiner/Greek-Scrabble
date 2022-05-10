@@ -78,7 +78,19 @@ namespace Scrabble.Model
             else return 0;
         }
 
-        private static IEnumerable<string> _words;
+        public class WordGroup
+        {
+            public string Word { get; set; }
+            public int Frequency { get; set; }
+            public string Definition { get; set; }
+            public string Conjugations { get; set; }
+            public string Cleaned { get; set; }
+            public override string ToString()
+            {
+                return $"{Word}: {Definition}";
+            }
+        }
+        private static IEnumerable<WordGroup> _words;
         public static IEnumerable<string> GetWords()
         {
             if (_words == null || !_words.Any())
@@ -86,23 +98,53 @@ namespace Scrabble.Model
                 _words = File.ReadAllLines(@"Model\Word\BBG Vocabulary.txt")
                 .Skip(1)
                 .Where(x => x.Trim().Length > 0)
-                .Select(x =>
-                    x.Split('\t')
+                .Select(x => new WordGroup
+                {
+                    Word = x.Split('\t')
                         .Skip(1)
                         .First()
                     .Split(',')
                         .First()
-                        .Trim()
+                        .Trim(), 
+                    Cleaned = RemoveDiacritics(x.Split('\t')
+                        .Skip(1)
+                        .First()
+                    .Split(',')
+                        .First()
+                        .Trim()),
+                    Definition = x.Split('\t').Skip(2).First(),
+                    Conjugations = x.Split('\t').Skip(1).First(),
+                    Frequency = int.Parse(x.Split('\t').First())
+                }
                 );
             }
-            return _words;
+            return _words.Select(x => x.Word);
             //Alternatively, use RemoveDiacritics when loading the word list then do a straight comparison
+        }
+
+        public static string Definition(string word)
+        {
+            return _words.FirstOrDefault(x => x.Cleaned == word)?.Definition;
+        }
+        public static int? Frequency(string word)
+        {
+            return _words.FirstOrDefault(x => x.Cleaned == word)?.Frequency;
+        }
+        public static string Conjugations(string word)
+        {
+            return _words.FirstOrDefault(x => x.Cleaned == word)?.Conjugations;
+        }
+        public static WordGroup Information(string word)
+        {
+            return _words.FirstOrDefault(x => x.Cleaned == word);
         }
 
         public static IEnumerable<string> Cheat(IEnumerable<char> letters)
         {
             return GetWords()
                 .Where(x => !RemoveDiacritics(x).ToCharArray().Any(c => !letters.Contains(c)));
+            //This works too:
+            //.Where(x => RemoveDiacritics(x).ToCharArray().Count(c => letters.Contains(c)) == x.Length);
         }
 
         public new static bool WordEqual(string s1, string s2, bool strict)

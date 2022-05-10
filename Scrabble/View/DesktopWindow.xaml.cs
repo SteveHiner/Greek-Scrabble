@@ -116,7 +116,11 @@ namespace Scrabble
             if (clickedButton == null) // safety reason
                 return;
             if (Convert.ToChar(clickedButton.Content) != '\0')
+            {
+                //TODO: If they clicked on a tile with a letter, extract the orthogonal words and show the definitions
+                //MessageBox.Show(AllGreekTiles.Definition(word));
                 return;
+            }
             clickedButton.Content = StorageLbl.Content;
             StorageLbl.Content = '\0';
 
@@ -248,13 +252,14 @@ namespace Scrabble
         private void ShowCheats(char? intersect = null)
         {
             var letters = game.gs.ListOfPlayers[ThisPlayer].PlayingTiles.Select(x => x.TileChar).ToList();
-            if (intersect.HasValue)
+            if (intersect.HasValue && intersect.Value != '\0')
                 letters.Add(intersect.Value);
             var possibles = game.Cheat(letters);
-            if (possibles.Any(x => x.Length > 1))
-                MessageBox.Show(string.Join(", ", possibles.Where(x => x.Length > 1)), "Cheat");
+            var query = new Func<string, bool>(x => x.Length > 1 && (!intersect.HasValue || intersect.Value == '\0' || AllGreekTiles.RemoveDiacritics(x).ToCharArray().Contains(intersect.Value)));
+            if (possibles.Any(query))
+                MessageBox.Show(string.Join(", ", possibles.Where(query)), "Cheat");
             else
-                MessageBox.Show("You're sunk.", "Cheat");
+                MessageBox.Show(intersect.HasValue && intersect.Value != '\0' ? "Swing and a miss." : "You're sunk.", "Cheat");
         }
 
         private void PassButton_Click(object sender, RoutedEventArgs e)
