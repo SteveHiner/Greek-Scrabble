@@ -63,6 +63,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controller\GameController.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Model\Game\GameEndVerify.cs" />
     <Compile Include="Model\Game\GameStartDraw.cs" />
     <Compile Include="Model\Game\GameState.cs" />

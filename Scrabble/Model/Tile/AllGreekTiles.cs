@@ -134,7 +134,7 @@ namespace Scrabble.Model
         {
             return _words.FirstOrDefault(x => x.Cleaned == word)?.Conjugations;
         }
-        public static WordGroup Information(string word)
+        public static WordGroup GetWordGroup(string word)
         {
             return _words.FirstOrDefault(x => x.Cleaned == word);
         }

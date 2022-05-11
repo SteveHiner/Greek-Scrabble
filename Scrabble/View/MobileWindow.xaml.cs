@@ -7,6 +7,8 @@ using Scrabble.View;
 using Scrabble.Model;
 using Scrabble.Controller;
 using System.Linq;
+using Scrabble2018.Helpers;
+using System.Windows.Input;
 
 namespace Scrabble
 {
@@ -36,7 +38,7 @@ namespace Scrabble
                 {
                     Button b = new Button();
                     b.Click += Copier;
-                    b.MouseDoubleClick += BoardButton_MouseDoubleClick;
+                    b.MouseDown += BoardButton_MouseDown;
                     b.FontSize = 9;
                     BoardGrid.Children.Add(b);
                     b.FontWeight = FontWeights.Bold;
@@ -107,8 +109,19 @@ namespace Scrabble
                 return;
             if (Convert.ToChar(clickedButton.Content) != '\0')
             {
-                //TODO: If they clicked on a tile with a letter, extract the orthogonal words and show the definitions
-                //MessageBox.Show(AllGreekTiles.Definition(word));
+                var location = BoardButtons.FindButton(clickedButton);
+                string vertWord = BoardButtons.ExtractVerticalWord(location.X, location.Y);
+                string horWord = BoardButtons.ExtractHorizontalWord(location.X, location.Y);
+                if (vertWord.Length > 1)
+                {
+                    var word = AllGreekTiles.GetWordGroup(vertWord);
+                    MessageBox.Show(this, word.ToString(), "Define");
+                }
+                if (horWord.Length > 1)
+                {
+                    var word = AllGreekTiles.GetWordGroup(horWord);
+                    MessageBox.Show(this, word.ToString(), "Define");
+                }
                 return;
             }
             clickedButton.Content = StorageLbl.Content;
@@ -243,12 +256,15 @@ namespace Scrabble
 
         }
 
-        private void BoardButton_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void BoardButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Button clickedButton = sender as Button;
-            if (clickedButton == null) // safety reason
-                return;
-            ShowCheats((char)clickedButton.Content);
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                Button clickedButton = sender as Button;
+                if (clickedButton == null)
+                    return;
+                ShowCheats((char)clickedButton.Content);
+            }
         }
 
         private void ShowCheats(char? intersect = null)
@@ -312,7 +328,7 @@ namespace Scrabble
 
         private void EnableAll()
         {
-            this.Topmost = true;
+            //this.Topmost = true;
             foreach (Button b in RackTileButtons)
             {
                 b.IsEnabled = true;
