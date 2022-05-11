@@ -46,35 +46,89 @@ namespace Scrabble.Model
 
         /*
          * Tiles distribution
-         * 98 tiles ?
-         * 2 blank tiles(?)
+         * ?? tiles
+         * 2 blank tiles
          */
         public static int ScoreOfLetter(char c)
         {
             var s = c.ToString();
-            if ("αεηιουωνρτλσς".Contains(s)) return 1;
-            else if ("δγ".Contains(s)) return 2;
-            else if ("βμπ".Contains(s)) return 3;
-            else if ("θφψ".Contains(s)) return 4;
-            else if ("κ".Contains(s)) return 5;
-            else if ("χ".Contains(s)) return 8;
-            else if ("ξζ".Contains(s)) return 10;
+            if ("αειονρ".Contains(s)) return 1;
+            else if ("υωτγ".Contains(s)) return 2;
+            else if ("ηλσςμπ".Contains(s)) return 3;
+            else if ("θφ".Contains(s)) return 4;
+            else if ("κβδ".Contains(s)) return 5;
+            else if ("χζ".Contains(s)) return 8;
+            else if ("ξψ".Contains(s)) return 10;
             else if ("-".Contains(s)) return 0;
             else return 0;
         }
+
+        /*
+         α: 881
+         β: 71
+         γ: 137
+         δ: 147
+         ε: 590
+         ζ: 70
+         η: 225
+         θ: 101
+         ι: 651
+         κ: 248
+         λ: 273
+         μ: 299
+         ν: 364
+         ξ: 26
+         ο: 674
+         π: 321
+         ρ: 380
+         ς: 351
+         σ: 280
+         τ: 331
+         υ: 273
+         φ: 76
+         χ: 100
+         ψ: 12
+         ω: 445
+
+         α: 881
+         ο: 674
+         ι: 651
+         ε: 590
+         ω: 445
+         ρ: 380
+         ν: 364
+         ς: 351
+         τ: 331
+         π: 321
+         μ: 299
+         σ: 280
+         λ: 273
+         υ: 273
+         κ: 248
+         η: 225
+         δ: 147
+         γ: 137
+         θ: 101
+         χ: 100
+         φ: 76
+         β: 71
+         ζ: 70
+         ξ: 26
+         ψ: 12
+        */
 
         [ExcludeFromCodeCoverage]
         private static int NumOfLetters(char c)
         {
             var s = c.ToString();
-            if ("ζξχ".Contains(s)) return 1;
-            else if ("πμκβθφψ".Contains(s)) return 2;
-            else if ("δσςυλ".Contains(s)) return 4;
-            else if ("γ".Contains(s)) return 3;
-            else if ("νρτ".Contains(s)) return 6;
-            else if ("οω".Contains(s)) return 8;
-            else if ("αι".Contains(s)) return 9;
-            else if ("εη".Contains(s)) return 12;
+            if ("ξψ".Contains(s)) return 1; //2
+            else if ("θχφβζ".Contains(s)) return 2; //10
+            else if ("υκηδγ".Contains(s)) return 4; //20
+            else if ("μσλ".Contains(s)) return 3; //9
+            else if ("νςτπ".Contains(s)) return 6; //24
+            else if ("εωρ".Contains(s)) return 8; //24
+            else if ("οι".Contains(s)) return 9; //18
+            else if ("α".Contains(s)) return 12; //12
             else return 0;
         }
 
@@ -111,15 +165,17 @@ namespace Scrabble.Model
                         .First()
                     .Split(',')
                         .First()
-                        .Trim()),
+                        .Trim()).ToLowerInvariant(),
                     Definition = x.Split('\t').Skip(2).First(),
                     Conjugations = x.Split('\t').Skip(1).First(),
                     Frequency = int.Parse(x.Split('\t').First())
                 }
                 );
+                //var letters = GetLetterFrequency();
+                //foreach (var item in letters.OrderByDescending(x => x.Value))
+                //    System.Diagnostics.Debug.WriteLine($"{item.Key}: {item.Value}");
             }
             return _words.Select(x => x.Word);
-            //Alternatively, use RemoveDiacritics when loading the word list then do a straight comparison
         }
 
         public static string Definition(string word)
@@ -137,6 +193,12 @@ namespace Scrabble.Model
         public static WordGroup GetWordGroup(string word)
         {
             return _words.FirstOrDefault(x => x.Cleaned == word);
+        }
+
+        public static IEnumerable<KeyValuePair<char, int>> GetLetterFrequency()
+        {
+            var everything = _words.Aggregate(new StringBuilder(), (result, x) => result.Append(x.Cleaned)).ToString();
+            return everything.ToCharArray().GroupBy(x => x, (x, y) => new KeyValuePair<char, int>(x, y.Count()));
         }
 
         public static IEnumerable<string> Cheat(IEnumerable<char> letters)
